@@ -12,6 +12,9 @@ module.exports = defineConfig({
   env:{
     login: {
       URL: 'https://uk.megabus.com/account-management/login'
+    },
+    bookBus: {
+      URL: 'https://uk.megabus.com/'
     }
   }
 });
