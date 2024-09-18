@@ -26,7 +26,7 @@ export class loginPage {
     assertSuccessfulLogin()
     {
         cy.get(this.weblocators.successMsg).invoke('text').then((successMsg) =>{
-            expect(successMsg).to.eq('Hello!')
+            cy.wrap(successMsg).should('eq','Hello!')
         })
     }
     assertUnsuccessfulLogin()

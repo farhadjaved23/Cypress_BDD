@@ -7,9 +7,9 @@ Given('User is at the login page', () => {
     loginObj.openURL()
 })
 
-When('User enters username as {string} and password as {string}', (username, password) => {
-    loginObj.enterEmail(username)
-    loginObj.enterPassword(password)
+When('User enters username as {string} and password as {string}', (usernames, passwords) => {
+    loginObj.enterEmail(usernames)
+    loginObj.enterPassword(passwords)
 })
 
 And('User clicks on login button', () => {

@@ -37,3 +37,24 @@ And('User verifies the the count of search result', () => {
 And('User verifies cheapest ticket', () => {
     journeyObj.assertCheapestTicket()
 })
+But('User edits the search for 2 travellers', () => {
+    journeyObj.assertCheapestTicket()
+})
+Then('users gets the cost for 2 travellers', () => {
+    journeyObj.getPriceValue()  
+    journeyObj.clickEditBtn()
+    bookingObj.addTraveller()
+    bookingObj.clickFindTickets()
+    journeyObj.assertPriceFor2Travellers()
+})
+
+And('User clicks on cart button in order to add', () =>{
+    journeyObj.addTicketInCart()
+})
+
+And('User changes the URL for Canada', () => {
+    journeyObj.selectCountry()
+})
+And('User does not get the count in Add to Cart', () => {
+    bookingObj.assertCartCount()
+})

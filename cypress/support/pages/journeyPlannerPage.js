@@ -9,26 +9,44 @@ export class journeyPlannerPage {
         searchedTicket: '#resultsAccordion > div',
         showingResult: 'body > main > div > mb-app > mb-journeys > mb-search-results > div > div > div > mb-search-results-list > div > div.ng-tns-c9-1 > div.row.sr-list__sort-filter > div.sr-list__text > span',
         sortDropdown: 'select[id="sortselected"]',
-        firstTicketPrice: '#heading1 > a > div:nth-child(1) > div.col-xs-4.ticket__price > span'
+        firstTicketPrice: '#heading1 > a > div:nth-child(1) > div.col-xs-4.ticket__price > span',
+        editBtn: 'a[class="sr-summary__edit"]',
+        cartBtn: '#heading1 > div > div.col-sm-4.col-sm-push-3 > button',
+        countryBtn: 'a[aria-label="Change location & language"]',
+        selectCA: '#navbar > ul > li.dropdown.lang.open > ul > li:nth-child(3) > ul > li:nth-child(1) > a'
+        
     }
 assertFromInput()
 {
     cy.get(this.weblocators.fromText).invoke('text').then(fromText =>{
-        expect(fromText).contains('Middlesbrough')
+        cy.wrap(fromText).should('include','Middlesbrough')
     })
 }
 assertToInput()
 {
-    cy.get(this.weblocators.toText).invoke('text').then(ToText =>{
-        expect(ToText).contains('London')
-    })
+    cy.get(this.weblocators.toText).invoke('text').then(ToText=> {
+    cy.wrap(ToText).should('include','London') 
+  });
 } 
-
 selectPrice()
 {
     cy.get(this.weblocators.sortDropdown).select(2)
 }
-
+clickEditBtn()
+{
+    cy.get(this.weblocators.editBtn).click()
+}
+addTicketInCart()
+{
+    cy.wait(6000)
+    cy.get(this.weblocators.cartBtn).click()
+    cy.wait(60000)
+}
+selectCountry()
+{
+   cy.get(this.weblocators.countryBtn).click() 
+   cy.get(this.weblocators.selectCA).click()
+}
 calculateTimeDifference(startTime, endTime) {
     const startDate = new Date(`1970-01-01T${startTime}:00Z`);
     const endDate = new Date(`1970-01-01T${endTime}:00Z`);
@@ -49,7 +67,7 @@ assertTimeDifference() {
             const expectedTimeDifference = this.calculateTimeDifference(startTime, endTime);
             cy.get(this.weblocators.timeDiff).invoke('text')
                 .then(displayedText => {
-                    expect(displayedText.substr(1, 6)).to.eq(expectedTimeDifference);
+                    cy.wrap(displayedText.substr(1, 6)).should('eq',expectedTimeDifference)
                 });
         });
 }
@@ -72,7 +90,7 @@ assertTimeDifference() {
             .invoke('text')
             .then(text => {
                 cy.log('Text from span: ' + text);
-                expect(text.substr(8, 1)).to.eq(indexx2.toString());
+                cy.wrap(text.substr(8, 1)).should('eq',indexx2.toString())
             });
     });
 }
@@ -91,8 +109,26 @@ assertCheapestTicket() {
             cy.wait(3000)
             cy.get(this.weblocators.firstTicketPrice).invoke('text')
                 .then(text => {
-                    expect(text).to.eq(price[0])
+                    cy.wrap(text).should('eq',price[0])
                 })
         });    
 }
+
+    getPriceValue()
+    {
+        cy.get(this.weblocators.firstTicketPrice).invoke('text')
+        .then(ticketPrice =>{
+            cy.log('ticket price is '+ticketPrice)
+            return ticketPrice
+        })
+    }
+    assertPriceFor2Travellers()
+    {
+        this.getPriceValue().then((ticketPrice) =>{
+            cy.get(this.weblocators.firstTicketPrice).invoke('text')
+            .then(priceFor2Travellers =>{
+                cy.wrap(priceFor2Travellers).should('eq',ticketPrice)
+            })
+        })
+    }
 }
